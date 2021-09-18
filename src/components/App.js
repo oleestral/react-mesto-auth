@@ -20,6 +20,7 @@ import {
   useHistory,
   BrowserRouter,
 } from "react-router-dom";
+import auth from "../utils/auth";
 
 function App() {
   const history = useHistory();
@@ -120,7 +121,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
-    setSelectedCard(false);
+    setSelectedCard({});
     setImageOpened(false);
     setIsInfoTooltipPopupOpen(false);
   }
@@ -142,13 +143,12 @@ function App() {
   }
   //login
   function handleSignIn(email, password) {
-    api
+    auth
       .signIn(email, password)
       .then((item) => {
         localStorage.setItem("jwt", item.token);
         setLoggedIn(true);
         setEmail(email);
-        console.log(loggedIn);
       })
       .catch((err) => {
         console.log(err);
@@ -156,10 +156,9 @@ function App() {
   }
   //signup
   function handleSignUp(email, password) {
-    api
+    auth
       .signUp(email, password)
       .then((item) => {
-        console.log(item);
         setSuccess(true);
         setIsInfoTooltipPopupOpen(true);
       })
@@ -179,16 +178,28 @@ function App() {
   React.useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     getGeneralData();
-    api
+    auth
       .checkToken(jwt)
       .then((item) => {
         setLoggedIn(true);
         setEmail(item.email);
-        console.log(loggedIn);
       })
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  // closing popups by Escape
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener("keydown", closeByEscape);
+
+    return () => document.removeEventListener("keydown", closeByEscape);
   }, []);
 
   return (

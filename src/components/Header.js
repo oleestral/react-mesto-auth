@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../images/logo.svg";
-import { Link, useLocation, Route } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Header(props) {
   const location = useLocation();

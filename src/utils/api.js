@@ -1,11 +1,7 @@
-import { ApiData } from "./constants";
-
-export const BASE_URL = "https://auth.nomoreparties.co";
-
 class Api {
-  constructor({ address, token }) {
+  constructor({ address, headers }) {
     this._address = address;
-    this._token = token;
+    this._headers = headers;
   }
   _getResponseData(res) {
     if (!res.ok) {
@@ -17,20 +13,14 @@ class Api {
   getUserInfo() {
     return fetch(`${this._address}/users/me`, {
       method: "GET",
-      headers: {
-        authorization: this._token,
-        "Content-type": "application/json",
-      },
+      headers: this._headers,
     }).then(this._getResponseData);
   }
   //edit user profile
   editUserProfile(name, about) {
     return fetch(`${this._address}/users/me`, {
       method: "PATCH",
-      headers: {
-        authorization: this._token,
-        "Content-type": "application/json",
-      },
+      headers: this._headers,
       body: JSON.stringify({
         name: name,
         about: about,
@@ -41,19 +31,14 @@ class Api {
   getInitialCards() {
     return fetch(`${this._address}/cards`, {
       method: "GET",
-      headers: {
-        authorization: this._token,
-      },
+      headers: this._headers,
     }).then(this._getResponseData);
   }
   //add user's cards
   addUserCards(name, link) {
     return fetch(`${this._address}/cards`, {
       method: "POST",
-      headers: {
-        authorization: this._token,
-        "Content-type": "application/json",
-      },
+      headers: this._headers,
       body: JSON.stringify({
         name: name,
         link: link,
@@ -64,18 +49,14 @@ class Api {
   removeUserCards(id) {
     return fetch(`${this._address}/cards/${id}`, {
       method: "DELETE",
-      headers: {
-        authorization: this._token,
-      },
+      headers: this._headers,
     }).then(this._getResponseData);
   }
   //like post
   like(id) {
     return fetch(`${this._address}/cards/likes/${id}`, {
       method: "PUT",
-      headers: {
-        authorization: this._token,
-      },
+      headers: this._headers,
     }).then(this._getResponseData);
   }
   //remove like
@@ -91,10 +72,7 @@ class Api {
   updateUserAvatar(info) {
     return fetch(`${this._address}/users/me/avatar`, {
       method: "PATCH",
-      headers: {
-        authorization: this._token,
-        "Content-Type": "application/json",
-      },
+      headers: this._headers,
       body: JSON.stringify({
         avatar: info.avatar,
       }),
@@ -104,42 +82,16 @@ class Api {
     const method = isLiked ? "DELETE" : "PUT";
     return fetch(`${this._address}/cards/likes/${id}`, {
       method: method,
-      headers: {
-        authorization: this._token,
-      },
-    }).then(this._getResponseData);
-  }
-  signIn(email, password) {
-    return fetch(`${BASE_URL}/signin`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    }).then(this._getResponseData);
-  }
-  signUp(email, password) {
-    return fetch(`${BASE_URL}/signup`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    }).then(this._getResponseData);
-  }
-  checkToken(token) {
-    return fetch(`${BASE_URL}/users/me`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this._headers,
     }).then(this._getResponseData);
   }
 }
 
-const api = new Api(ApiData);
+const api = new Api({
+  address: "https://mesto.nomoreparties.co/v1/cohort-22",
+  headers: {
+    authorization: "42bb299b-ecdd-434e-b139-b5601cfc74ef",
+    "Content-Type": "application/json",
+  },
+});
 export default api;
