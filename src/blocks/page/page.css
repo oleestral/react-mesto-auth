@@ -9,4 +9,5 @@
   -moz-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   position: relative;
+  background-color: black;
 }

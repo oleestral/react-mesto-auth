@@ -149,6 +149,7 @@ function App() {
         localStorage.setItem("jwt", item.token);
         setLoggedIn(true);
         setEmail(email);
+        console.log(email);
       })
       .catch((err) => {
         console.log(err);
@@ -182,7 +183,7 @@ function App() {
       .checkToken(jwt)
       .then((item) => {
         setLoggedIn(true);
-        setEmail(item.email);
+        setEmail(item.data.email);
       })
       .catch((err) => {
         console.log(err);
@@ -204,7 +205,7 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="root">
+      <div className="root" id="root">
         <div className="page">
           <BrowserRouter>
             <Header email={email} onLogOut={handleLogOut} loggedIn={loggedIn} />
@@ -242,7 +243,7 @@ function App() {
               </Route>
             </Switch>
           </BrowserRouter>
-          <Footer />
+          {loggedIn && <Footer />}
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
